@@ -1,0 +1,27 @@
+{
+  "model": {
+    "vocab_size": 8192,
+    "context_length": 512,
+    "d_model": 768,
+    "n_layers": 12,
+    "n_heads": 12,
+    "n_kv_heads": 4,
+    "d_ff": 2688,
+    "dropout": 0.0,
+    "tie_embeddings": true
+  },
+  "training": {
+    "batch_size": 4,
+    "gradient_accumulation": 8,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "warmup_steps": 200,
+    "max_steps": 10000,
+    "min_lr_ratio": 0.1,
+    "eval_every": 100,
+    "eval_batches": 8,
+    "gradient_clip": 1.0,
+    "seed": 42,
+    "mixed_precision": true
+  }
+}

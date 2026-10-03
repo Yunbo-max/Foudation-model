@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fm-tutorial"
+version = "0.1.0"
+description = "中文基础模型教程与原创实践代码"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+dependencies = ["numpy>=1.24,<3", "torch>=2.3,<3"]
+
+[project.optional-dependencies]
+data = ["huggingface_hub>=1,<2", "httpx[socks]>=0.27,<1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

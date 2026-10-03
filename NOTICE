@@ -1,0 +1,6 @@
+This repository contains original educational prose and implementations.
+Its syllabus draws on publicly described topics in Jie Tang's Advanced
+Machine Learning course and the primary sources listed in references/sources.md.
+It is an independent tutorial, not an official Tsinghua course distribution.
+External repositories and datasets retain their own licenses and terms.
+No third-party repository is bundled wholesale in this project.
