@@ -47,6 +47,7 @@
 | [17 基础算法](tutorials/17-diffusion.md) | Gaussian、Markov、DDPM、DDIM、score、VP/VE、reverse SDE、probability-flow ODE、CFG 与 flow matching | [continuous.py](src/fm_tutorial/diffusion/continuous.py)、[models.py](src/fm_tutorial/diffusion/models.py) |
 | [17A 文本](tutorials/17a-diffusion-text.md) | embedding/latent 与 token 解码、D3PM 转移和后验、absorbing MASK、双向网络与解掩码 | [discrete.py](src/fm_tutorial/diffusion/discrete.py) |
 | [17B 各模态](tutorials/17b-diffusion-modalities.md) | 图像 U-Net/DiT/latent、混合类型表格、时空视频、动态 3D 与多视角约束 | [diffusion_shapes.py](scripts/diffusion_shapes.py)；作者源码导读 |
+| [17C 条件生成](tutorials/17c-diffusion-conditioning.md) | cat、相加、FiLM、AdaLN/Zero、cross-attention、条件 token、空间控制，以及 CFG/classifier guidance | [conditioning.py](src/fm_tutorial/diffusion/conditioning.py)、[条件诊断](scripts/conditioning_check.py)、[条件生成演示](scripts/conditioning_demo.py) |
 
 ```bash
 # 环境沿用本页的 pip install -e .；CPU 可运行
@@ -54,6 +55,8 @@ python scripts/diffusion_shapes.py
 python scripts/diffusion_demo.py --mode gaussian --sampler ddim --train-steps 300 --out-dir runs/diffusion-gaussian
 python scripts/diffusion_demo.py --mode score --sampler ode --train-steps 300 --sample-steps 100 --out-dir runs/diffusion-score
 python scripts/diffusion_demo.py --mode masked --train-steps 300 --out-dir runs/diffusion-masked
+python scripts/conditioning_check.py
+python scripts/conditioning_demo.py --method adaln --train-steps 300 --out-dir runs/conditioning-adaln
 ```
 
 演示保存模型、实际损失、生成样本和配置；默认使用明确标注的合成教学输入。连续模式可通过 `--data-npy` 接入预处理的真实数据。小演示与 shape 检查用于理解算法；没有在此复现大型图像、视频、4D 模型的训练或基准结果。详细实验路线见 [实践六](assignments/06-diffusion.md)。

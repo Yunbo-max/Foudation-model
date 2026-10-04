@@ -1,0 +1,264 @@
+{
+  "date": "2026-10-04",
+  "scope": "CPU synthetic two-class conditioning demonstrations; no held-out quality metric or fair architecture comparison",
+  "code_files_sha256": {
+    "scripts/conditioning_demo.py": "def4a00583deef75e8ccef716fa80aab7625c169604679f21086477fb10143ac",
+    "scripts/conditioning_check.py": "5fe83eb31c6763861513d0962ad8248aa4be31aee0c11dd06e87d465f130bdca",
+    "src/fm_tutorial/diffusion/conditioning.py": "33408f51f48946554811d8f3dcfcc6805930459030cfb4fdb49320b7b050fd1f",
+    "src/fm_tutorial/diffusion/continuous.py": "190ddc186aa95a20a2872010144104eeaec054ae8026098e157595d0f9a437fa"
+  },
+  "runs": [
+    {
+      "scope": "synthetic two-class algorithm demonstration; no held-out quality metric",
+      "method": "cat",
+      "train_steps": 300,
+      "diffusion_steps": 100,
+      "sample_steps": 20,
+      "guidance_scale": 1.5,
+      "condition_dropout": 0.1,
+      "null_condition_training_examples": 1975,
+      "conditional_training_examples": 17225,
+      "schedule": {
+        "name": "linear",
+        "beta_start": 0.0001,
+        "beta_end": 0.12,
+        "terminal_alpha_bar": 0.001907210098579526,
+        "initial_prior": "standard Gaussian, approximate terminal marginal"
+      },
+      "device": "cpu",
+      "batch_size": 64,
+      "learning_rate": 0.002,
+      "torch_version": "2.14.1+cpu",
+      "numpy_version": "2.5.3",
+      "paired_initial_noise_equal": true,
+      "seed": 7,
+      "parameters": 4610,
+      "sample_shape": [
+        2,
+        64,
+        2
+      ],
+      "source_centers": [
+        [
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "generated_class_means": [
+        [
+          -1.0964118242263794,
+          -0.04552668333053589
+        ],
+        [
+          1.1188335418701172,
+          0.044342294335365295
+        ]
+      ],
+      "first_batch_loss": {
+        "step": 1,
+        "epsilon_mse": 0.9247671961784363
+      },
+      "last_batch_loss": {
+        "step": 300,
+        "epsilon_mse": 0.10909336805343628
+      },
+      "sampler_callback_calls_per_class": 20,
+      "logical_prediction_branches_per_class": 40,
+      "samples_sha256": "13e1319ff74d4bfcc08c105168c62cf3151c07633583fa7f726915c09f506ea1",
+      "training_csv_sha256": "4956f54d2be7ba6081d8e987e8693fe1ab6265240e9f707faaaf1c136b65f5a8"
+    },
+    {
+      "scope": "synthetic two-class algorithm demonstration; no held-out quality metric",
+      "method": "add",
+      "train_steps": 300,
+      "diffusion_steps": 100,
+      "sample_steps": 20,
+      "guidance_scale": 1.5,
+      "condition_dropout": 0.1,
+      "null_condition_training_examples": 1884,
+      "conditional_training_examples": 17316,
+      "schedule": {
+        "name": "linear",
+        "beta_start": 0.0001,
+        "beta_end": 0.12,
+        "terminal_alpha_bar": 0.001907210098579526,
+        "initial_prior": "standard Gaussian, approximate terminal marginal"
+      },
+      "device": "cpu",
+      "batch_size": 64,
+      "learning_rate": 0.002,
+      "torch_version": "2.14.1+cpu",
+      "numpy_version": "2.5.3",
+      "paired_initial_noise_equal": true,
+      "seed": 7,
+      "parameters": 3586,
+      "sample_shape": [
+        2,
+        64,
+        2
+      ],
+      "source_centers": [
+        [
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "generated_class_means": [
+        [
+          -1.168879747390747,
+          0.20463186502456665
+        ],
+        [
+          1.2773975133895874,
+          0.055051110684871674
+        ]
+      ],
+      "first_batch_loss": {
+        "step": 1,
+        "epsilon_mse": 1.1852138042449951
+      },
+      "last_batch_loss": {
+        "step": 300,
+        "epsilon_mse": 0.11936712265014648
+      },
+      "sampler_callback_calls_per_class": 20,
+      "logical_prediction_branches_per_class": 40,
+      "samples_sha256": "1aaffd579df69a7f4c0996607ab6d7af9da0c2d628259c0cdf6d198e2a1cb8f4",
+      "training_csv_sha256": "ba8aa768fac818d8f6619a572c665e162163a287f0c8c017e923af64c97498e2"
+    },
+    {
+      "scope": "synthetic two-class algorithm demonstration; no held-out quality metric",
+      "method": "film",
+      "train_steps": 300,
+      "diffusion_steps": 100,
+      "sample_steps": 20,
+      "guidance_scale": 1.5,
+      "condition_dropout": 0.1,
+      "null_condition_training_examples": 1910,
+      "conditional_training_examples": 17290,
+      "schedule": {
+        "name": "linear",
+        "beta_start": 0.0001,
+        "beta_end": 0.12,
+        "terminal_alpha_bar": 0.001907210098579526,
+        "initial_prior": "standard Gaussian, approximate terminal marginal"
+      },
+      "device": "cpu",
+      "batch_size": 64,
+      "learning_rate": 0.002,
+      "torch_version": "2.14.1+cpu",
+      "numpy_version": "2.5.3",
+      "paired_initial_noise_equal": true,
+      "seed": 7,
+      "parameters": 4642,
+      "sample_shape": [
+        2,
+        64,
+        2
+      ],
+      "source_centers": [
+        [
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "generated_class_means": [
+        [
+          -0.9953185319900513,
+          -0.03590058535337448
+        ],
+        [
+          1.1026513576507568,
+          0.007963170297443867
+        ]
+      ],
+      "first_batch_loss": {
+        "step": 1,
+        "epsilon_mse": 0.9578337669372559
+      },
+      "last_batch_loss": {
+        "step": 300,
+        "epsilon_mse": 0.06703639030456543
+      },
+      "sampler_callback_calls_per_class": 20,
+      "logical_prediction_branches_per_class": 40,
+      "samples_sha256": "9ffc2fb1415e0509f0f31f602894a632377f0bed4b86ada040716c18f16a4604",
+      "training_csv_sha256": "52366a711f9d992cc7439cb79f0d209d2e44cb0f4547282754d196a2d6ac7e45"
+    },
+    {
+      "scope": "synthetic two-class algorithm demonstration; no held-out quality metric",
+      "method": "adaln",
+      "train_steps": 300,
+      "diffusion_steps": 100,
+      "sample_steps": 20,
+      "guidance_scale": 1.5,
+      "condition_dropout": 0.1,
+      "null_condition_training_examples": 1910,
+      "conditional_training_examples": 17290,
+      "schedule": {
+        "name": "linear",
+        "beta_start": 0.0001,
+        "beta_end": 0.12,
+        "terminal_alpha_bar": 0.001907210098579526,
+        "initial_prior": "standard Gaussian, approximate terminal marginal"
+      },
+      "device": "cpu",
+      "batch_size": 64,
+      "learning_rate": 0.002,
+      "torch_version": "2.14.1+cpu",
+      "numpy_version": "2.5.3",
+      "paired_initial_noise_equal": true,
+      "seed": 7,
+      "parameters": 4642,
+      "sample_shape": [
+        2,
+        64,
+        2
+      ],
+      "source_centers": [
+        [
+          -1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ]
+      ],
+      "generated_class_means": [
+        [
+          -0.9828111529350281,
+          0.009115456603467464
+        ],
+        [
+          1.0564199686050415,
+          0.00016500987112522125
+        ]
+      ],
+      "first_batch_loss": {
+        "step": 1,
+        "epsilon_mse": 0.9671517610549927
+      },
+      "last_batch_loss": {
+        "step": 300,
+        "epsilon_mse": 0.06148158013820648
+      },
+      "sampler_callback_calls_per_class": 20,
+      "logical_prediction_branches_per_class": 40,
+      "samples_sha256": "0d63e533aa2c366e91fb1f9df3f941bd38d712dee4656a4da0d5085a4d178852",
+      "training_csv_sha256": "6f1d1cb070daa352ca84db1cb03b692ff10615ecb13625e84e9c146af771dd15"
+    }
+  ]
+}

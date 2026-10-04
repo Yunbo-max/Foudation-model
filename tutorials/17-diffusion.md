@@ -3,6 +3,8 @@
 > 前置：[00 概率与张量](00-prerequisites.md)、[02 架构](02-architecture.md)；后续：[17a 文本扩散](17a-diffusion-text.md)、[17b 图像、表格、视频与 4D](17b-diffusion-modalities.md)。
 > 原创实现：[continuous.py](../src/fm_tutorial/diffusion/continuous.py)、[models.py](../src/fm_tutorial/diffusion/models.py)；实验：[diffusion_demo.py](../scripts/diffusion_demo.py)；交付：[作业六](../assignments/06-diffusion.md)；一手来源：[阅读索引](../references/diffusion.md)。
 
+条件如何进入网络，以及 cat、相加、AdaLN 与 cross-attention 的区别，另见 [17C 条件生成](17c-diffusion-conditioning.md)。
+
 ## 17.1 场景一：知道怎样弄脏，不等于知道怎样恢复
 
 设有一批二维位置：某些点靠近左侧簇，另一些靠近右侧簇。

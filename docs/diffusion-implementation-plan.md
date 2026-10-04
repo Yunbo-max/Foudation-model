@@ -32,3 +32,7 @@
 3. Tutorials and sources: write 17/17a/17b from primary references; connect formulas, scenes, shapes and exact code APIs; independently audit equations and modality boundaries.
 4. Demos and integration: implement CLI Gaussian/masked training and multi-modality shape checks with bounded CPU runs; write assignment; add README and reference navigation; preserve existing 71 tests.
 5. Verification and publish: run complete unittest suite, alignment checks, Markdown links, compileall and demo commands; record actual measurements and unexecuted work; independent review; update remote main with a fast-forward commit and verify remote content/CI.
+
+## Conditioning follow-up (2026-10-04)
+
+User explicitly requested concat/add/AdaLN and other conditional generation methods. Add a focused `17c` companion and small `conditioning.py` blocks without changing noise processes. Test exact algebra, zero residual initialization and its gradients, key padding, token routing and CFG anchors; execute a structural diagnostic and a two-class synthetic Gaussian training/sampling chain with learned null condition. Review code, runnable examples and distinction between injection/guidance; integrate navigation and primary sources, then publish the authorized update.

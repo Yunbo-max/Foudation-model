@@ -10,7 +10,7 @@
 | 怎样用同一个模型改变采样步数 | [DDIM](https://arxiv.org/abs/2010.02502) | [functions/denoising.py](https://github.com/ermongroup/ddim/blob/main/functions/denoising.py) | `ddim_step`、`sample(..., sampler="ddim")` |
 | 噪声日程怎样控制信息衰减 | [Improved DDPM](https://arxiv.org/abs/2102.09672) | [openai/improved-diffusion](https://github.com/openai/improved-diffusion) | cosine schedule；没有实现论文中的 learned variance |
 | score、Langevin、reverse SDE 与 ODE 怎样连接 | [Score-SDE](https://arxiv.org/abs/2011.13456)；[NCSN](https://arxiv.org/abs/1907.05600) | [sde_lib.py](https://github.com/yang-song/score_sde/blob/main/sde_lib.py)、[sampling.py](https://github.com/yang-song/score_sde/blob/main/sampling.py) | `VPSDE`：VP marginal、reverse Euler-Maruyama 与 Euler ODE；VE 与 predictor-corrector 在教程讲解 |
-| 条件分支与无条件分支怎样组合 | [Classifier-Free Guidance](https://arxiv.org/abs/2207.12598) | [openai/guided-diffusion](https://github.com/openai/guided-diffusion) 是相关的 **classifier-guidance** 代码，需区分两者 | 17 主章公式与条件 dropout 示例，不把两种 guidance 混成同一算法 |
+| 条件分支与无条件分支怎样组合 | [Classifier-Free Guidance](https://arxiv.org/abs/2207.12598) | [openai/guided-diffusion](https://github.com/openai/guided-diffusion) 是相关的 **classifier-guidance** 代码，需区分两者 | 17C 的 CFG 函数、条件 dropout 与二维实际训练演示；不把两种 guidance 混成同一算法 |
 | velocity field 怎样训练 | [Flow Matching](https://arxiv.org/abs/2210.02747)；[Rectified Flow](https://arxiv.org/abs/2209.03003) | [facebookresearch/flow_matching](https://github.com/facebookresearch/flow_matching)、[gnobitab/RectifiedFlow](https://github.com/gnobitab/RectifiedFlow) | 与 DDPM/score 比较；本仓库没有实现完整 flow matching runner |
 
 建议沿官方代码中的 `q_sample / posterior / p_sample` 或同义函数定位，不从大型配置系统开始。注意 TensorFlow、JAX 与 PyTorch 版本差异；本仓库是独立写的小型 PyTorch 实现，没有复制这些实现。
@@ -44,7 +44,25 @@
 
 阅读大模型时检查实际训练目标：使用 Transformer、latent 或视频数据并不能确定模型使用 DDPM。Wan2.1 的 flow matching 配方不能直接替换成 DDPM epsilon loss；SV4D/4DGen 的动态几何流程也不能缩写成“对 `[B,F,N,3]` 随机张量加噪就复现了”。[形状脚本](../scripts/diffusion_shapes.py) 仅展示共享概率算法怎样作用于不同表示。
 
-## 源码核对清单
+## 条件生成专题来源
+
+配套 [17C](../tutorials/17c-diffusion-conditioning.md) 与 [conditioning.py](../src/fm_tutorial/diffusion/conditioning.py)。
+
+| 方法 | 原始来源与源码 | 阅读重点 |
+|---|---|---|
+| DiT 的四类 conditioning 与 adaLN-Zero | [论文](https://arxiv.org/abs/2212.09748)、[models.py](https://github.com/facebookresearch/DiT/blob/main/models.py) | `c=t+y` 与 adaptive normalization 是不同操作；六路调制、残差门与单独输出层初始化 |
+| Text cross-attention | [LDM](https://arxiv.org/abs/2112.10752)、[attention.py](https://github.com/CompVis/latent-diffusion/blob/main/ldm/modules/attention.py) | noisy data 提供 Q，文本提供 K/V；保留条件 token 与 padding 语义 |
+| FiLM | [论文](https://arxiv.org/abs/1709.07871) | 条件生成逐特征的仿射变换；FiLM 本身不是 diffusion 专属算法 |
+| 空间自适应归一化 SPADE | [论文](https://arxiv.org/abs/1903.07291)、[NVlabs/SPADE](https://github.com/NVlabs/SPADE) | scale/shift 保留空间位置；原方法是语义图像合成，不是 DDPM sampler |
+| ControlNet | [论文](https://arxiv.org/abs/2302.05543)、[lllyasviel/ControlNet](https://github.com/lllyasviel/ControlNet) | 冻结主干、可训练分支、多层空间 residual 与 zero convolution |
+| 图像提示 IP-Adapter | [论文](https://arxiv.org/abs/2308.06721)、[tencent-ailab/IP-Adapter](https://github.com/tencent-ailab/IP-Adapter) | text/image 分开的 cross-attention；不是所有 reference-image conditioning 都叫 ControlNet |
+| Joint attention / MMDiT | [SD3 论文](https://arxiv.org/abs/2403.03206) | 双模态不同参数、联合 attention；不要与单向 text K/V 混同 |
+| Classifier guidance | [论文](https://arxiv.org/abs/2105.05233)、[openai/guided-diffusion](https://github.com/openai/guided-diffusion) | 学 noisy classifier，使用关于 xt 的 log-likelihood 梯度 |
+| CFG | [论文](https://arxiv.org/abs/2207.12598) | 学 conditional/null 两个分支，再按参数约定组合；与网络条件注入可以同时使用 |
+
+本仓库新实现是独立的小模块。`ZeroSpatialResidual` 仅展示 zero-conv 控制残差结构，没有复制完整 ControlNet 分支；`PrefixCondition` 没有实现完整 MMDiT；简单 CFG 组合不等于离散 logits 上的任意线性外推。
+
+## 源码核对清单（运行前）
 
 1. 数据张量的每一轴是什么？时间轴是 diffusion time 还是物理时间？
 2. 网络输出是 epsilon、x0、v、score、velocity 还是 clean-token logits？

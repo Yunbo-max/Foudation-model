@@ -87,6 +87,47 @@ class DiffusionScriptTests(unittest.TestCase):
         self.assertTrue(report["table_categorical"]["posterior_normalized"])
         self.assertTrue(report["masked_text"]["condition_preserved"])
 
+    def test_conditioning_check_verifies_zero_initialization_and_cfg_anchors(self):
+        result = self.run_script("conditioning_check.py")
+        report = json.loads(result.stdout)
+        self.assertEqual(report["adaln_zero_identity_error"], 0.0)
+        self.assertEqual(report["zero_spatial_identity_error"], 0.0)
+        self.assertTrue(report["cfg_scale_zero_matches_unconditional"])
+        self.assertTrue(report["cfg_scale_one_matches_conditional"])
+        self.assertLess(report["concat_projected_sum_error"], 1e-5)
+        self.assertGreater(report["cross_attention_condition_change"], 0)
+
+    def test_conditional_demo_trains_null_branch_and_saves_paired_outputs(self):
+        import numpy as np
+        with tempfile.TemporaryDirectory() as directory:
+            self.run_script("conditioning_demo.py", "--method", "adaln", "--train-steps", "3",
+                            "--samples", "4", "--diffusion-steps", "10", "--sample-steps", "4",
+                            "--out-dir", directory)
+            values = np.load(Path(directory) / "samples.npy")
+            self.assertEqual(values.shape, (2, 4, 2))
+            self.assertTrue(np.isfinite(values).all())
+            record = json.loads((Path(directory) / "report.json").read_text())
+            self.assertEqual(record["method"], "adaln")
+            self.assertGreater(record["null_condition_training_examples"], 0)
+            self.assertGreater(record["conditional_training_examples"], 0)
+            self.assertEqual(record["schedule"]["name"], "linear")
+            self.assertEqual(record["schedule"]["beta_end"], 0.12)
+            self.assertTrue(record["paired_initial_noise_equal"])
+
+    def test_conditional_demo_requires_actual_training_for_both_cfg_branches(self):
+        env = dict(os.environ, OMP_NUM_THREADS="1", MKL_NUM_THREADS="1")
+        with tempfile.TemporaryDirectory() as directory:
+            for dropout in ("1e-12", "0.999999999999"):
+                with self.subTest(dropout=dropout):
+                    result = subprocess.run(
+                        [sys.executable, str(ROOT / "scripts/conditioning_demo.py"),
+                         "--train-steps", "1", "--condition-dropout", dropout,
+                         "--out-dir", directory], cwd=ROOT, env=env,
+                        text=True, capture_output=True, timeout=60)
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("Both null and conditional training examples are required", result.stderr)
+                    self.assertFalse((Path(directory) / "report.json").exists())
+
 
 if __name__ == "__main__":
     unittest.main()

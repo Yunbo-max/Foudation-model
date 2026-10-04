@@ -1,5 +1,7 @@
 # 17b　跨模态 diffusion：图像、混合表格、视频与动态 3D
 
+条件注入的具体计算与可运行小模块另见 [17C 条件生成](17c-diffusion-conditioning.md)。
+
 > 前置：[17 DDPM 与 score-based 模型](17-diffusion.md)、[17a 连续与离散文本](17a-diffusion-text.md)；代码：[continuous.py](../src/fm_tutorial/diffusion/continuous.py)、[discrete.py](../src/fm_tutorial/diffusion/discrete.py)；运行入口：[diffusion_shapes.py](../scripts/diffusion_shapes.py)；实践：[作业六](../assignments/06-diffusion.md)；逐项来源：[diffusion 来源表](../references/diffusion.md)。
 
 本章要回答的不是“哪些领域也用了 diffusion”，而是：同一个加噪公式移到新数据上时，什么可以复用，什么必须重做？我们沿着四个场景走：生成一张条件图像、合成一行混合类型的表格、生成一个连续视频片段，以及从视频构建可以换视角观察的动态 3D 对象。

@@ -43,6 +43,23 @@ python scripts/diffusion_demo.py --mode categorical --train-steps 300 --diffusio
 
 ## 第三层：换成公开数据
 
+### 先理解条件注入
+
+读 [17C 条件生成](../tutorials/17c-diffusion-conditioning.md)，执行：
+
+```bash
+python scripts/conditioning_check.py
+python scripts/conditioning_demo.py --method cat --train-steps 300 --out-dir runs/conditioning-cat
+python scripts/conditioning_demo.py --method add --train-steps 300 --out-dir runs/conditioning-add
+python scripts/conditioning_demo.py --method film --train-steps 300 --out-dir runs/conditioning-film
+python scripts/conditioning_demo.py --method adaln --train-steps 300 --out-dir runs/conditioning-adaln
+```
+
+先解释特征/通道拼接与 token 拼接的轴，再验证投影相加、FiLM、AdaLN 和零残差的计算。
+生成演示实际训练两类二维 Gaussian 点（中心分别为 `[-1,0]` 与 `[1,0]`），以条件 dropout 学习 null 分支，再在同一份初始 noise 上分别采样两个类别。它显示条件路径怎样接进 epsilon 去噪与 CFG，不是新 benchmark。
+四个模块的参数量和初始化不同；这些独立训练只做机制演示，不能按损失或样本均值排序谁更优。公平消融还需匹配数据流、容量、训练预算、初始噪声、采样与评估。
+`guidance_scale=0/1/>1` 分别代表 null/普通条件/强化引导，`condition_dropout` 只丢弃语义条件，保留 diffusion timestep 与训练目标。详细接口见脚本 `--help`；输出包含模型、实际 batch 损失、采样点与 null 分支训练次数。
+
 连续演示可接入你已完成预处理的浮点数组 `[N,...]`：
 
 ```bash

@@ -170,4 +170,29 @@ GitHub Actions 配置随项目提交，远端运行状态以 GitHub 页面为准
 
 `diffusion_shapes.py` 的五种连续表示 oracle-noise 重建最大绝对误差不超过 `2.98e-7`；类别后验归一化和 MASK 条件保留成立。随机 embedding、图像/视频 latent 和对齐点轨迹没有经过真实 codec，也没有证明生成质量。
 
-未执行完整 MDLM likelihood bound、TabDDPM/TabDiff 复现、预训练 U-Net/DiT、视频大模型、动态场景 renderer/codec 或真实 4D benchmark。VE、predictor-corrector、CFG 与 flow matching 的讲解/代码草图也不能替代相应的大规模训练和评估。
+未执行完整 MDLM likelihood bound、TabDDPM/TabDiff 复现、预训练 U-Net/DiT、视频大模型、动态场景 renderer/codec 或真实 4D benchmark。VE、predictor-corrector、flow matching 的讲解/代码草图和下节的小型 CFG 演示也不能替代相应的大规模训练和评估。
+
+## 8. 条件生成专题验证（2026-10-04）
+
+新增 [17C 条件生成](../tutorials/17c-diffusion-conditioning.md)、[conditioning.py](../src/fm_tutorial/diffusion/conditioning.py)、[结构检查](../scripts/conditioning_check.py) 与 [实际训练演示](../scripts/conditioning_demo.py)。最终全量 `unittest` 实际运行 **142 项**，33.032 秒，全部通过，无跳过；相较上一节新增 23 项模块测试与 3 项 CLI 测试。另执行 alignment、diffusion shapes、conditioning 诊断、编译、Git 空白和 Markdown 本地链接检查，均通过。
+
+独立审阅核对了 concat 的线性等价条件、AdaLN 的统计轴、DiT 六路调制与完整零输出头的首次梯度区别、padding/null token、prefix 与 joint attention、空间分支和 CFG 的密度解释。已修正“共同的后续非线性会破坏线性等价”的不准确表述：对相等 affine 输出施加同一个函数仍保持相等。17C 的 8 个 Python 代码块分别在独立进程中实际执行通过。
+
+数学诊断中，concat 分块投影等价误差为 `2.38e-7`；AdaLN-Zero block 与 zero spatial residual 的初始恒等误差均为 0。AdaLN-Zero 收到显式损失后一次 SGD 更新产生非零输出变化；cross-attention 的有效条件变化影响输出；CFG 的 `scale=0/1` 分别匹配 null/conditional 预测。行为测试另检查首次梯度被哪些零参数阻断、padding 不影响读取和更改条件会改变路径。
+
+### 四个实际 300 步条件训练演示
+
+完整真实配置、loss、类别均值、训练分支计数与代码/产物 SHA256 见 [conditioning-demo-records.json](conditioning-demo-records.json)。数据是明确的两类合成二维 Gaussian 点，中心 `[-1,0]`、`[1,0]`，每维标准差 0.1。各自训练 300 步，batch=64、FP32、AdamW lr=0.002、seed=7、条件 dropout=0.1；每类生成 64 点，DDIM 20 步、CFG scale=1.5。
+
+| 方法 | 参数数 | 实际 null 训练样本数 | 类别 0 生成均值 | 类别 1 生成均值 |
+|---|---:|---:|---|---|
+| cat | 4,610 | 1,975 | `[-1.0964,-0.0455]` | `[1.1188,0.0443]` |
+| add | 3,586 | 1,884 | `[-1.1689,0.2046]` | `[1.2774,0.0551]` |
+| FiLM | 4,642 | 1,910 | `[-0.9953,-0.0359]` | `[1.1027,0.0080]` |
+| AdaLN | 4,642 | 1,910 | `[-0.9828,0.0091]` | `[1.0564,0.0002]` |
+
+每个演示的两个类别使用相同初始噪声，输出均为有限的 `[2,64,2]`；模型、逐步 loss 与样本保存完成。每类 20 次 sampler callback，每次以双 batch 计算两条 CFG 分支，即 40 份逻辑分支预测。实际 conditional/null 样本均存在，脚本会拒绝未观察到任一分支的短训练。
+
+教学配置显式采用 100 步线性 beta `1e-4..0.12`，终点 alpha_bar 为 `0.0019072101`，标准 Gaussian 初始先验为近似。最初用默认 cosine 的短训练能产生有限但严重偏离数据的样本；极小终点 alpha_bar 会放大 epsilon 误差。改用温和日程使此演示更适合解释条件路径，并不证明它在其它任务中更优。均值接近中心也不构成分布质量或 held-out 指标；方法的参数和随机消耗不同，这些结果不能用于公平排名。
+
+未训练大型文本/图像条件模型，未加载 DiT、ControlNet、IP-Adapter 或 MMDiT 权重，未复现 SPADE 或 noisy classifier guidance 训练。教学零空间残差和单层 prefix 仅实现文中声明的组件，不能称为完整参考模型复现。

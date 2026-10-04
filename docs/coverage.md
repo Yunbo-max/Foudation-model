@@ -20,5 +20,6 @@
 | Evaluation / safety | 15 | 评估集隔离、污染、reward hacking及公开工具；测试不证明基准能力 |
 | Frontier | 16 | 从真实任务和已知失败出发设计可证伪研究，无拼接式“新颖性”承诺 |
 | 本项目新增 Diffusion 专题 | 17、17A、17B；实践6 | DDPM/DDIM、VP score-SDE/ODE、dense categorical 与随机解掩码可运行；六类数据表示与原论文源码导读；未训练大型多模态模型 |
+| Diffusion 条件生成扩展 | 17C；实践6 | 八个条件注入教学模块、CFG、结构检查与二维条件生成；SPADE/ControlNet/IP-Adapter/joint attention 有原理与作者源码导读，不冒充完整复现 |
 
 教材按课程地图组织，但讲解顺序、例子、数据选择、验收要求和实现细节属于本项目。新闻报道和个人计划不会覆盖这些明确的边界。
