@@ -142,3 +142,32 @@ python scripts/fit_scaling.py --csv runs/final-chain/measurements.csv --axis tok
 约 100M 配置的参数计数已核对：8192 词表时 99,502,848，2048 词表时 94,784,256，512 词表时 93,604,608；参数计数不代表训练完成。
 对应章节和作业给出原理、源码入口与真实任务的实验协议，实际执行后才能增加测量结果。
 GitHub Actions 配置随项目提交，远端运行状态以 GitHub 页面为准，本地通过不自动等于云端 CI 已通过。
+
+## 7. Diffusion 专题增补验证（2026-10-04）
+
+新增 [17 基础算法](../tutorials/17-diffusion.md)、[17A 文本](../tutorials/17a-diffusion-text.md)、[17B 各模态](../tutorials/17b-diffusion-modalities.md) 及 [实践六](../assignments/06-diffusion.md)，原有章节与真实 TinyStories 验证记录保留。
+
+本次环境仍为 Python 3.12.14、PyTorch 2.14.1+cpu、NumPy 2.5.3；没有 CUDA。最终全量 `unittest` 实际运行 **116 项**，23.955 秒，全部通过，无跳过；其中原有 71 项，新增 45 项。另执行原有 alignment 数学检查、diffusion shape 检查、Python 编译与本地 Markdown 链接检查，均正常退出。
+
+连续算法检查包含 Gaussian 闭式、oracle x0、精确后验、DDPM 干净端、DDIM 跳步/随机性与混合端点、VP marginal/score 和 reverse SDE/ODE 的方向与系数。离散检查包含路径枚举、后验归一化、条件后验混合、MASK 概率、prompt 隔离、双向网络、梯度和半精度零损失。CLI 检查涵盖真实脚本训练/保存/采样、外部数组的 shape 保留与六类表示。
+
+独立审阅修正了接口导入、DDIM 时间参数 shape、masked CE 的 batch 归一化说明、MASK 调用次数记录、categorical 普通词表，以及点云跨样本 ID 与跨帧轨迹对应的区别。主章 14 个、文本章 8 个 Python 代码块已顺序执行；多模态章 4 个代码块编译通过，其中 2 个完整独立例子执行通过，另外 2 个依赖已说明的数据/feature 变量，并以显式输入检查。代码块与模块测试都只验证其声明的范围。
+
+### 六个实际 300 步教学演示
+
+完整配置、真实 batch loss、样本哈希、示例文本和实现文件哈希保存于 [diffusion-demo-records.json](diffusion-demo-records.json)。连续演示为明确的二维八分量 Gaussian mixture；文本为八句固定长度 whitespace 教学文本。batch=64、FP32，每个变体 300 次更新，生成 64 个样本。
+
+| 算法 | 参数数 | 采样网络调用数 | 实际输出 | 检查结果 |
+|---|---:|---:|---|---|
+| DDPM | 4,674 | 100 | `[64,2]` | 有限值，模型/损失/样本保存完成 |
+| DDIM | 4,674 | 20 | `[64,2]` | 有限值，clean endpoint 正常 |
+| VP reverse SDE | 4,674 | 100 | `[64,2]` | 有限值，负时间 Euler-Maruyama 正常 |
+| VP probability-flow ODE | 4,674 | 100 | `[64,2]` | 有限值，停在 `t_min=0.001` |
+| Mask diffusion | 27,954 | 实测 20 | `[64,6]` | prompt `the small` 保留，最终没有 MASK |
+| Uniform categorical | 27,889 | 100 | `[64,6]` | 普通词表采样完成；仍可能出现不通顺句子 |
+
+分别核对 DDPM/DDIM 和 SDE/ODE 两组的最终模型权重逐位相同；各组使用相同训练配置/种子，只在训练后改变采样器。运行耗时来自并发 CPU 演示，不能作为公平的效率排名；网络调用次数也不等于壁钟速度。
+
+`diffusion_shapes.py` 的五种连续表示 oracle-noise 重建最大绝对误差不超过 `2.98e-7`；类别后验归一化和 MASK 条件保留成立。随机 embedding、图像/视频 latent 和对齐点轨迹没有经过真实 codec，也没有证明生成质量。
+
+未执行完整 MDLM likelihood bound、TabDDPM/TabDiff 复现、预训练 U-Net/DiT、视频大模型、动态场景 renderer/codec 或真实 4D benchmark。VE、predictor-corrector、CFG 与 flow matching 的讲解/代码草图也不能替代相应的大规模训练和评估。

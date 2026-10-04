@@ -1,0 +1,286 @@
+{
+  "date": "2026-10-04",
+  "scope": "CPU algorithm teaching runs on explicit synthetic fixtures; no benchmark results or full paper reproduction",
+  "code_files_sha256": {
+    "scripts/diffusion_demo.py": "9c2f9926cbb973557d25a8cb2863148778ae23df54fe6f0560202c120206df63",
+    "src/fm_tutorial/diffusion/__init__.py": "37a252c1d80c7640ed954d526f2d371dbdb349cfc4d762d719e01f3607d35e61",
+    "src/fm_tutorial/diffusion/continuous.py": "190ddc186aa95a20a2872010144104eeaec054ae8026098e157595d0f9a437fa",
+    "src/fm_tutorial/diffusion/discrete.py": "0968a0cc824b1aac605eb682fc8a9a05fb024565e246feb3f56e63ab0f24d0ee",
+    "src/fm_tutorial/diffusion/models.py": "681e414dda44e5cbe3ab5161ae26b5bc39d818167d3ef39de560d9e3d333af41"
+  },
+  "runs": [
+    {
+      "mode": "categorical",
+      "sampler": null,
+      "train_steps": 300,
+      "diffusion_steps": 100,
+      "sample_steps": 100,
+      "seed": 7,
+      "device": "cpu",
+      "batch_size": 64,
+      "learning_rate": 0.002,
+      "torch_version": "2.14.1+cpu",
+      "numpy_version": "2.5.3",
+      "parameters": 27889,
+      "sample_shape": [
+        64,
+        6
+      ],
+      "elapsed_seconds": 4.3274,
+      "first_batch_loss": {
+        "step": 1,
+        "denoising_ce": 3.045496702194214
+      },
+      "last_batch_loss": {
+        "step": 300,
+        "denoising_ce": 0.6594482064247131
+      },
+      "evidence_scope": "algorithm teaching run; no held-out quality metric or paper reproduction",
+      "data_source": "synthetic fixed-length whitespace text teaching fixture",
+      "training_sentences": 8,
+      "vocabulary": [
+        "bird",
+        "blue",
+        "cat",
+        "cool",
+        "dog",
+        "green",
+        "happy",
+        "likes",
+        "milk",
+        "sees",
+        "skies",
+        "small",
+        "the",
+        "trees",
+        "warm",
+        "water",
+        "young"
+      ],
+      "mask_id": null,
+      "objective": "auxiliary clean-token CE",
+      "prompt": null,
+      "network_evaluations_per_sample_batch": 100,
+      "samples_finite": true,
+      "samples_sha256": "22596e813ff0c71bac763ebe3dbb9867f492a629a5628826cc2f808dc02b9774",
+      "example_samples": [
+        "the small bird green green trees",
+        "the young cat sees green trees",
+        "the happy dog sees blue skies"
+      ]
+    },
+    {
+      "mode": "gaussian",
+      "sampler": "ddim",
+      "train_steps": 300,
+      "diffusion_steps": 100,
+      "sample_steps": 20,
+      "seed": 7,
+      "device": "cpu",
+      "batch_size": 64,
+      "learning_rate": 0.002,
+      "torch_version": "2.14.1+cpu",
+      "numpy_version": "2.5.3",
+      "parameters": 4674,
+      "sample_shape": [
+        64,
+        2
+      ],
+      "elapsed_seconds": 1.3539,
+      "first_batch_loss": {
+        "step": 1,
+        "epsilon_mse": 1.0685737133026123
+      },
+      "last_batch_loss": {
+        "step": 300,
+        "epsilon_mse": 0.36957329511642456
+      },
+      "evidence_scope": "algorithm teaching run; no held-out quality metric or paper reproduction",
+      "data_source": "synthetic eight-Gaussian 2D teaching fixture",
+      "components": 8,
+      "radius": 1.0,
+      "component_std": 0.05,
+      "alpha_bar_terminal": 2.4285407107527135e-07,
+      "time_convention": "array 0..T-1 maps to mathematical 1..T",
+      "network_evaluations_per_sample_batch": 20,
+      "samples_finite": true,
+      "samples_sha256": "ae42779ab572602069c626823d6d43e8aaa683bffcfe61c28974aa8d084d2b1e"
+    },
+    {
+      "mode": "gaussian",
+      "sampler": "ddpm",
+      "train_steps": 300,
+      "diffusion_steps": 100,
+      "sample_steps": 100,
+      "seed": 7,
+      "device": "cpu",
+      "batch_size": 64,
+      "learning_rate": 0.002,
+      "torch_version": "2.14.1+cpu",
+      "numpy_version": "2.5.3",
+      "parameters": 4674,
+      "sample_shape": [
+        64,
+        2
+      ],
+      "elapsed_seconds": 2.091,
+      "first_batch_loss": {
+        "step": 1,
+        "epsilon_mse": 1.0685737133026123
+      },
+      "last_batch_loss": {
+        "step": 300,
+        "epsilon_mse": 0.36957329511642456
+      },
+      "evidence_scope": "algorithm teaching run; no held-out quality metric or paper reproduction",
+      "data_source": "synthetic eight-Gaussian 2D teaching fixture",
+      "components": 8,
+      "radius": 1.0,
+      "component_std": 0.05,
+      "alpha_bar_terminal": 2.4285407107527135e-07,
+      "time_convention": "array 0..T-1 maps to mathematical 1..T",
+      "network_evaluations_per_sample_batch": 100,
+      "samples_finite": true,
+      "samples_sha256": "cb3252ee3abaca7d4e186ef155200c69837d5d0a9a405f20be932f7e87343467"
+    },
+    {
+      "mode": "masked",
+      "sampler": null,
+      "train_steps": 300,
+      "diffusion_steps": 100,
+      "sample_steps": 20,
+      "seed": 7,
+      "device": "cpu",
+      "batch_size": 64,
+      "learning_rate": 0.002,
+      "torch_version": "2.14.1+cpu",
+      "numpy_version": "2.5.3",
+      "parameters": 27954,
+      "sample_shape": [
+        64,
+        6
+      ],
+      "elapsed_seconds": 7.1545,
+      "first_batch_loss": {
+        "step": 1,
+        "denoising_ce": 2.875335216522217
+      },
+      "last_batch_loss": {
+        "step": 300,
+        "denoising_ce": 0.5464158058166504
+      },
+      "evidence_scope": "algorithm teaching run; no held-out quality metric or paper reproduction",
+      "data_source": "synthetic fixed-length whitespace text teaching fixture",
+      "training_sentences": 8,
+      "vocabulary": [
+        "<mask>",
+        "bird",
+        "blue",
+        "cat",
+        "cool",
+        "dog",
+        "green",
+        "happy",
+        "likes",
+        "milk",
+        "sees",
+        "skies",
+        "small",
+        "the",
+        "trees",
+        "warm",
+        "water",
+        "young"
+      ],
+      "mask_id": 0,
+      "objective": "unweighted masked-token CE",
+      "prompt": "the small",
+      "network_evaluations_per_sample_batch": 20,
+      "samples_finite": true,
+      "samples_sha256": "0d15b2a47bfead44e29fea9ba329e9eed53dddd14c0c32de39d9ecfa4d0a7944",
+      "example_samples": [
+        "the small cat likes warm milk",
+        "the small cat likes warm milk",
+        "the small cat likes warm milk"
+      ]
+    },
+    {
+      "mode": "score",
+      "sampler": "ode",
+      "train_steps": 300,
+      "diffusion_steps": 100,
+      "sample_steps": 100,
+      "seed": 7,
+      "device": "cpu",
+      "batch_size": 64,
+      "learning_rate": 0.002,
+      "torch_version": "2.14.1+cpu",
+      "numpy_version": "2.5.3",
+      "parameters": 4674,
+      "sample_shape": [
+        64,
+        2
+      ],
+      "elapsed_seconds": 3.6989,
+      "first_batch_loss": {
+        "step": 1,
+        "epsilon_mse": 1.0652246475219727
+      },
+      "last_batch_loss": {
+        "step": 300,
+        "epsilon_mse": 0.14300891757011414
+      },
+      "evidence_scope": "algorithm teaching run; no held-out quality metric or paper reproduction",
+      "data_source": "synthetic eight-Gaussian 2D teaching fixture",
+      "components": 8,
+      "radius": 1.0,
+      "component_std": 0.05,
+      "solver": "Euler ODE",
+      "t_min": 0.001,
+      "network_evaluations_per_sample_batch": 100,
+      "samples_finite": true,
+      "samples_sha256": "9d0f5afe3b9a756a14fbebe174494e2a36cbde6092f6b0663a780e2658b4104f"
+    },
+    {
+      "mode": "score",
+      "sampler": "sde",
+      "train_steps": 300,
+      "diffusion_steps": 100,
+      "sample_steps": 100,
+      "seed": 7,
+      "device": "cpu",
+      "batch_size": 64,
+      "learning_rate": 0.002,
+      "torch_version": "2.14.1+cpu",
+      "numpy_version": "2.5.3",
+      "parameters": 4674,
+      "sample_shape": [
+        64,
+        2
+      ],
+      "elapsed_seconds": 1.3616,
+      "first_batch_loss": {
+        "step": 1,
+        "epsilon_mse": 1.0652246475219727
+      },
+      "last_batch_loss": {
+        "step": 300,
+        "epsilon_mse": 0.14300891757011414
+      },
+      "evidence_scope": "algorithm teaching run; no held-out quality metric or paper reproduction",
+      "data_source": "synthetic eight-Gaussian 2D teaching fixture",
+      "components": 8,
+      "radius": 1.0,
+      "component_std": 0.05,
+      "solver": "Euler-Maruyama reverse SDE",
+      "t_min": 0.001,
+      "network_evaluations_per_sample_batch": 100,
+      "samples_finite": true,
+      "samples_sha256": "7f70a7728f2b46e04cc8657fc7fd42db14fe823b9a68368a09ede7a091fb8c24"
+    }
+  ],
+  "paired_training_checks": {
+    "gaussian-ddpm vs gaussian-ddim": true,
+    "score-sde vs score-ode": true
+  }
+}

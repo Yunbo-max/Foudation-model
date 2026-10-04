@@ -19,5 +19,6 @@
 | Self-evaluation / evolution | 14；作业5 | Self-judge作为建议，external verifier裁定；不能把自信当正确性 |
 | Evaluation / safety | 15 | 评估集隔离、污染、reward hacking及公开工具；测试不证明基准能力 |
 | Frontier | 16 | 从真实任务和已知失败出发设计可证伪研究，无拼接式“新颖性”承诺 |
+| 本项目新增 Diffusion 专题 | 17、17A、17B；实践6 | DDPM/DDIM、VP score-SDE/ODE、dense categorical 与随机解掩码可运行；六类数据表示与原论文源码导读；未训练大型多模态模型 |
 
 教材按课程地图组织，但讲解顺序、例子、数据选择、验收要求和实现细节属于本项目。新闻报道和个人计划不会覆盖这些明确的边界。

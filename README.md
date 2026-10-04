@@ -11,6 +11,7 @@
 - 想直接跑一次完整的基础训练链路：按下面“第一条可运行链路”，然后做 [作业 1](assignments/01-foundations.md)。
 - 想读工业级训练仓库：读 [官方开源训练体系导读](references/open-training.md)，先定位数据、模型、训练、后训练和评估各自的代码。
 - 想研究 self-judge / 长程 Agent：先读 [10 RLVR](tutorials/10-rlvr.md)、[11 Agent RL](tutorials/11-agent-rl.md)、[14 自评与自演化](tutorials/14-self-evolution.md)，再做 [作业 5](assignments/05-agent.md)。
+- 想系统理解 Diffusion：从 [17 DDPM、DDIM 与 score-based](tutorials/17-diffusion.md) 开始，接着读 [连续 latent 与离散文本](tutorials/17a-diffusion-text.md)、[图片、表格、视频与 4D](tutorials/17b-diffusion-modalities.md)，配合 [实践六](assignments/06-diffusion.md)。
 
 每章按“基础与场景 → 数学 → 实现 → 实验 → 误区 → 理解检查”展开。解释中的例子用于理解；模型评价使用公开数据集与既有 benchmark，不把手造题、单元测试或合成曲线当作研究结果。
 
@@ -35,7 +36,27 @@
 | 15 | [评估与安全](tutorials/15-evaluation-safety.md) | 如何比较模型、发现泄漏，并识别 reward hacking？ |
 | 16 | [下一阶段与研究问题](tutorials/16-frontier.md) | 怎样把前沿方向转成可证伪、有真实基准的研究问题？ |
 
-补充：[预备知识](tutorials/00-prerequisites.md) · [课程与实践覆盖表](docs/coverage.md) · [源码导读](references/open-training.md)。
+补充：[预备知识](tutorials/00-prerequisites.md) · [课程与实践覆盖表](docs/coverage.md) · [源码导读](references/open-training.md) · [Diffusion 专题与原始来源](references/diffusion.md)。
+
+## Diffusion 专题：从概率算法到六类数据
+
+本专题是原有 16 周主线的扩展，按“场景 → 基础 → 公式 → 代码 → 失败原因”学习。
+
+| 阅读顺序 | 内容 | 对应代码 |
+|---|---|---|
+| [17 基础算法](tutorials/17-diffusion.md) | Gaussian、Markov、DDPM、DDIM、score、VP/VE、reverse SDE、probability-flow ODE、CFG 与 flow matching | [continuous.py](src/fm_tutorial/diffusion/continuous.py)、[models.py](src/fm_tutorial/diffusion/models.py) |
+| [17A 文本](tutorials/17a-diffusion-text.md) | embedding/latent 与 token 解码、D3PM 转移和后验、absorbing MASK、双向网络与解掩码 | [discrete.py](src/fm_tutorial/diffusion/discrete.py) |
+| [17B 各模态](tutorials/17b-diffusion-modalities.md) | 图像 U-Net/DiT/latent、混合类型表格、时空视频、动态 3D 与多视角约束 | [diffusion_shapes.py](scripts/diffusion_shapes.py)；作者源码导读 |
+
+```bash
+# 环境沿用本页的 pip install -e .；CPU 可运行
+python scripts/diffusion_shapes.py
+python scripts/diffusion_demo.py --mode gaussian --sampler ddim --train-steps 300 --out-dir runs/diffusion-gaussian
+python scripts/diffusion_demo.py --mode score --sampler ode --train-steps 300 --sample-steps 100 --out-dir runs/diffusion-score
+python scripts/diffusion_demo.py --mode masked --train-steps 300 --out-dir runs/diffusion-masked
+```
+
+演示保存模型、实际损失、生成样本和配置；默认使用明确标注的合成教学输入。连续模式可通过 `--data-npy` 接入预处理的真实数据。小演示与 shape 检查用于理解算法；没有在此复现大型图像、视频、4D 模型的训练或基准结果。详细实验路线见 [实践六](assignments/06-diffusion.md)。
 
 ## 五项实践交付
 
@@ -92,6 +113,7 @@ TinyStories 是论文作者真实发布的**合成训练语料**，这里获取�
 | [alignment.py](src/fm_tutorial/alignment.py) | Completion log-prob、SFT/DPO、group advantage 与 GRPO/PPO 核心损失 |
 | [scaling.py](src/fm_tutorial/scaling.py) | 对真实训练测量作单轴拟合与 held-out 预测 |
 | [agent.py](src/fm_tutorial/agent.py) | 有界工具循环、外部 verifier、advisory self-judge、轨迹日志 |
+| [diffusion/](src/fm_tutorial/diffusion/) | 原创 DDPM/DDIM、VP SDE/ODE、categorical 与 masked diffusion，以及小型去噪网络 |
 
 后训练损失是可调用组件；完整 rollout 分布式对齐和真实长程 Agent RL 参照作业指南及官方框架。GPU Triton kernel 的完整 forward/backward、多 GPU、部署压测和研究基准结果需要对应硬件运行，不能由 CPU 单元测试替代。
 
